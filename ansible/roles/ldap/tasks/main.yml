@@ -1,0 +1,44 @@
+---
+# tasks file for ldap
+
+    - name: Install openldap-servers openldap-clients
+      yum: name={{ item }} state=present
+      with_items:
+        - openldap-servers 
+        - openldap-clients
+
+    - name: copy DB_CONFIG.example
+      template: src=DB_CONFIG.example dest=/var/lib/ldap/DB_CONFIG
+
+    - file: dest=/var/lib/ldap owner=ldap group=ldap recurse=yes
+     
+    - shell: mv /etc/openldap/slapd.d /etc/openldap/slapd.d.original   
+ 
+    - name: copy /etc/openldap/slapd.conf
+      template: src=slapd.conf dest=/etc/openldap/slapd.conf
+
+    - name: start ldap
+      service: name=slapd state=running
+    
+    - name: copy init.ldif
+      template: src=ldap-init.ldif dest=/etc/openldap/ldap-init.ldif
+     
+      
+    - shell: ldapadd -x -D "cn=admin,dc=mnt,dc=lab" -w "{{ pass1 }}" -f /etc/openldap/ldap-init.ldif  
+
+    - name: copy user.ldif
+      template: src=ldap-antontkachenka.ldif dest=/etc/openldap/ldap-antontkachenka.ldif
+
+    - shell: ldapadd -x -D "cn=admin,dc=mnt,dc=lab" -w "{{ pass1 }}" -f /etc/openldap/ldap-antontkachenka.ldif
+
+    - name: install rpm for phpldap
+      yum: name={{ phpldapadmin_rpm }} state=present
+    
+    - name: install phpldapadmin
+      yum: name=phpldapadmin state=present
+ 
+    - name: copy httpd configuration
+      template: src=phpldapadmin.conf dest=/etc/httpd/conf.d/phpldapadmin.conf
+
+    - name: start httpd
+      service: name=httpd state=running
