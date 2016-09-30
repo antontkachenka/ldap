@@ -1,0 +1,27 @@
+# antontkachenka, Groups, mnt.lab
+dn: cn=antontkachenka,ou=Groups,dc=mnt,dc=lab
+cn: antontkachenka
+gidNumber: 10501
+objectClass: posixGroup
+objectClass: top
+memberUid: antontkachenka
+
+# antontkachenka, People, mnt.lab
+dn: uid=antontkachenka,ou=People,dc=mnt,dc=lab
+uid: antontkachenka
+homeDirectory: /home/antontkachenka
+loginShell: /bin/bash
+mail: antontkachenka@local
+uidNumber: 10501
+gidNumber: 10501
+gecos: User In LDAP
+cn: User In LDAP
+givenName: Anton_Tkachenka
+sn: InLDAP
+objectClass: top
+objectClass: posixAccount
+objectClass: shadowAccount
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+userPassword: 123456
